@@ -1,0 +1,39 @@
+name: customer_app
+description: "Raftar Gaddi — customer application."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.0
+
+resolution: workspace
+
+dependencies:
+  core:
+    path: ../../packages/core
+  cupertino_icons: ^1.0.8
+  design_system:
+    path: ../../packages/design_system
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^3.3.2
+  go_router: ^17.3.0
+  localization:
+    path: ../../packages/localization
+  mock_data:
+    path: ../../packages/mock_data
+  repositories:
+    path: ../../packages/repositories
+  shared_models:
+    path: ../../packages/shared_models
+  shared_widgets:
+    path: ../../packages/shared_widgets
+  storage:
+    path: ../../packages/storage
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
