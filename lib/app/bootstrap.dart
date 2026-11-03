@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mock_data/mock_data.dart';
 import 'package:storage/storage.dart';
 
 /// Initialises platform services, then runs [app] inside a configured

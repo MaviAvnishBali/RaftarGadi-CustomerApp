@@ -73,7 +73,7 @@ void main() {
   testWidgets('phone -> OTP -> home reaches the tab shell', (tester) async {
     await _signInToHome(tester);
     expect(find.byType(NavigationBar), findsOneWidget);
-    expect(find.text('Choose a vehicle'), findsOneWidget);
+    expect(find.text('Available in your area'), findsOneWidget);
   });
 
   testWidgets('a wrong OTP shows the invalid-code error', (tester) async {
@@ -108,27 +108,21 @@ void main() {
     await _signInToHome(tester);
 
     // Start the flow from home.
+    await tester.ensureVisible(find.text('Book now'));
     await tester.tap(find.text('Book now'));
     await tester.pumpAndSettle();
     expect(find.text('Where to?'), findsOneWidget);
 
-    // Pick pickup, then drop, via the address subtitles (unique text).
-    await tester.tap(find.text('Select pickup'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('221B, Koramangala, Bengaluru'));
+    // Pick 1-Tap Route
+    await tester.tap(find.text('Connaught Place ➔ DLF Cyber City'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Select drop'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('WeWork, Indiranagar, Bengaluru'));
+    await tester.tap(find.text('Continue to Vehicle Selection'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Continue'));
-    await tester.pumpAndSettle();
-
-    // Vehicle selection: pick the first option, then review.
+    // Vehicle selection
     expect(find.text('Estimating fares…'), findsNothing);
-    await tester.tap(find.text('Bike'));
+    await tester.tap(find.byType(ListTile).first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Review booking'));
     await tester.pumpAndSettle();

@@ -10,26 +10,30 @@ resolution: workspace
 
 dependencies:
   core:
-    path: ../../packages/core
+    path: ../RaftarGadi-SharedPackages/packages/core
   cupertino_icons: ^1.0.8
   design_system:
-    path: ../../packages/design_system
+    path: ../RaftarGadi-SharedPackages/packages/design_system
   flutter:
     sdk: flutter
   flutter_riverpod: ^3.3.2
   go_router: ^17.3.0
+  flutter_map: ^8.3.2
+  geolocator: ^14.1.2
+  geolocator_android: ^5.2.1
+  latlong2: ^0.10.1
   localization:
-    path: ../../packages/localization
+    path: ../RaftarGadi-SharedPackages/packages/localization
   mock_data:
-    path: ../../packages/mock_data
+    path: ../RaftarGadi-SharedPackages/packages/mock_data
   repositories:
-    path: ../../packages/repositories
+    path: ../RaftarGadi-SharedPackages/packages/repositories
   shared_models:
-    path: ../../packages/shared_models
+    path: ../RaftarGadi-SharedPackages/packages/shared_models
   shared_widgets:
-    path: ../../packages/shared_widgets
+    path: ../RaftarGadi-SharedPackages/packages/shared_widgets
   storage:
-    path: ../../packages/storage
+    path: ../RaftarGadi-SharedPackages/packages/storage
 
 dev_dependencies:
   flutter_test:

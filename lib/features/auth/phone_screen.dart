@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:repositories/repositories.dart';
+import 'package:shared_widgets/shared_widgets.dart';
 
 /// The customer sign-in screen. Existing customers verify their phone via OTP.
 class PhoneScreen extends ConsumerStatefulWidget {
@@ -56,59 +57,61 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AuthPage(
-      eyebrow: 'Welcome back',
-      title: 'Sign in to move more.',
-      subtitle: 'Enter the phone number linked to your Raftar Gaddi account.',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          RaftarTextField(
-            label: 'Phone number',
-            controller: _phone,
-            hint: '98765 43210',
-            prefixIcon: Icons.phone_rounded,
-            keyboardType: TextInputType.phone,
-            errorText: _error,
-            onChanged: (_) {
-              if (_error != null) setState(() => _error = null);
-            },
-          ),
-          const SizedBox(height: RaftarSpacing.xl),
-          RaftarButton(
-            label: 'Continue with OTP',
-            isLoading: _busy,
-            onPressed: _requestOtp,
-          ),
-          const SizedBox(height: RaftarSpacing.xxl),
-          Row(
-            children: [
-              const Expanded(child: Divider()),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: RaftarSpacing.md,
+    return DoubleBackExitScope(
+      child: AuthPage(
+        eyebrow: 'Welcome back',
+        title: 'Sign in to move more.',
+        subtitle: 'Enter the phone number linked to your Raftar Gaddi account.',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            RaftarTextField(
+              label: 'Phone number',
+              controller: _phone,
+              hint: '98765 43210',
+              prefixIcon: Icons.phone_rounded,
+              keyboardType: TextInputType.phone,
+              errorText: _error,
+              onChanged: (_) {
+                if (_error != null) setState(() => _error = null);
+              },
+            ),
+            const SizedBox(height: RaftarSpacing.xl),
+            RaftarButton(
+              label: 'Continue with OTP',
+              isLoading: _busy,
+              onPressed: _requestOtp,
+            ),
+            const SizedBox(height: RaftarSpacing.xxl),
+            Row(
+              children: [
+                const Expanded(child: Divider()),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: RaftarSpacing.md,
+                  ),
+                  child: Text(
+                    'NEW TO RAFTAR?',
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
                 ),
-                child: Text(
-                  'NEW TO RAFTAR?',
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
-              ),
-              const Expanded(child: Divider()),
-            ],
-          ),
-          const SizedBox(height: RaftarSpacing.lg),
-          RaftarButton(
-            label: 'Create an account',
-            variant: RaftarButtonVariant.secondary,
-            onPressed: () => context.go(Routes.register),
-          ),
-          const SizedBox(height: RaftarSpacing.xl),
-          Text(
-            'By continuing, you agree to our Terms of Service and Privacy Policy.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ],
+                const Expanded(child: Divider()),
+              ],
+            ),
+            const SizedBox(height: RaftarSpacing.lg),
+            RaftarButton(
+              label: 'Create an account',
+              variant: RaftarButtonVariant.secondary,
+              onPressed: () => context.go(Routes.register),
+            ),
+            const SizedBox(height: RaftarSpacing.xl),
+            Text(
+              'By continuing, you agree to our Terms of Service and Privacy Policy.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
     );
   }

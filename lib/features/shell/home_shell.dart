@@ -16,36 +16,40 @@ class HomeShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return RaftarNavShell(
-      selectedIndex: navigationShell.currentIndex,
-      onDestinationSelected: (index) => navigationShell.goBranch(
-        index,
-        initialLocation: index == navigationShell.currentIndex,
+    return DoubleBackExitScope(
+      onBack: () {
+        if (navigationShell.currentIndex != 0) {
+          navigationShell.goBranch(0);
+          return true;
+        }
+        return false;
+      },
+      child: RaftarNavShell(
+        selectedIndex: navigationShell.currentIndex,
+        onDestinationSelected: (index) => navigationShell.goBranch(
+          index,
+          initialLocation: index == navigationShell.currentIndex,
+        ),
+        leading: const RaftarLogo(height: 40),
+        destinations: [
+          RaftarDestination(
+            icon: Icons.home_outlined,
+            selectedIcon: Icons.home_rounded,
+            label: l10n.navHome,
+          ),
+          RaftarDestination(
+            icon: Icons.receipt_long_outlined,
+            selectedIcon: Icons.receipt_long_rounded,
+            label: l10n.navBookings,
+          ),
+          RaftarDestination(
+            icon: Icons.person_outline_rounded,
+            selectedIcon: Icons.person_rounded,
+            label: l10n.navProfile,
+          ),
+        ],
+        body: navigationShell,
       ),
-      leading: const RaftarLogo(height: 40),
-      destinations: [
-        RaftarDestination(
-          icon: Icons.home_outlined,
-          selectedIcon: Icons.home_rounded,
-          label: l10n.navHome,
-        ),
-        RaftarDestination(
-          icon: Icons.receipt_long_outlined,
-          selectedIcon: Icons.receipt_long_rounded,
-          label: l10n.navBookings,
-        ),
-        RaftarDestination(
-          icon: Icons.account_balance_wallet_outlined,
-          selectedIcon: Icons.account_balance_wallet_rounded,
-          label: l10n.navWallet,
-        ),
-        RaftarDestination(
-          icon: Icons.person_outline_rounded,
-          selectedIcon: Icons.person_rounded,
-          label: l10n.navProfile,
-        ),
-      ],
-      body: navigationShell,
     );
   }
 }

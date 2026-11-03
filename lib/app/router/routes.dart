@@ -15,4 +15,9 @@ abstract final class Routes {
   static const String bookingVehicle = '/booking/vehicle';
   static const String bookingReview = '/booking/review';
   static const String bookingConfirmed = '/booking/confirmed';
+  static const String tripTracking = '/booking/track';
+
+  // Support & FAQ
+  static const String faq = '/faq';
+  static const String supportChat = '/support/chat';
 }

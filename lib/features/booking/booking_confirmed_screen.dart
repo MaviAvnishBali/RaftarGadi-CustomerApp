@@ -44,10 +44,17 @@ class BookingConfirmedScreen extends StatelessWidget {
               ),
               const Spacer(),
               RaftarButton(
-                label: 'View my bookings',
-                onPressed: () => context.go(Routes.bookings),
+                label: 'Track Driver Live on Map',
+                icon: Icons.map_rounded,
+                onPressed: () => context.push('${Routes.tripTracking}?id=$bookingId'),
               ),
               const SizedBox(height: RaftarSpacing.md),
+              RaftarButton(
+                label: 'View my bookings',
+                variant: RaftarButtonVariant.secondary,
+                onPressed: () => context.go(Routes.bookings),
+              ),
+              const SizedBox(height: RaftarSpacing.sm),
               RaftarButton(
                 label: 'Back to home',
                 variant: RaftarButtonVariant.text,

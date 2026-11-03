@@ -7,10 +7,13 @@ import 'package:customer_app/features/booking/booking_confirmed_screen.dart';
 import 'package:customer_app/features/booking/booking_review_screen.dart';
 import 'package:customer_app/features/booking/vehicle_select_screen.dart';
 import 'package:customer_app/features/bookings/bookings_screen.dart';
+import 'package:customer_app/features/faq/faq_screen.dart';
 import 'package:customer_app/features/home/home_screen.dart';
 import 'package:customer_app/features/profile/profile_screen.dart';
 import 'package:customer_app/features/shell/home_shell.dart';
 import 'package:customer_app/features/splash/splash_screen.dart';
+import 'package:customer_app/features/support/support_chat_screen.dart';
+import 'package:customer_app/features/tracking/trip_tracking_screen.dart';
 import 'package:customer_app/features/wallet/wallet_screen.dart';
 import 'package:customer_app/session/session_controller.dart';
 import 'package:flutter/widgets.dart';
@@ -94,20 +97,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: Routes.wallet,
-                builder: (context, state) => const WalletScreen(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
                 path: Routes.profile,
                 builder: (context, state) => const ProfileScreen(),
               ),
             ],
           ),
         ],
+      ),
+      GoRoute(
+        path: Routes.wallet,
+        builder: (context, state) => const WalletScreen(),
       ),
       GoRoute(
         path: Routes.bookingAddress,
@@ -125,6 +124,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: Routes.bookingConfirmed,
         builder: (context, state) => BookingConfirmedScreen(
           bookingId: state.uri.queryParameters['id'] ?? '',
+        ),
+      ),
+      GoRoute(
+        path: Routes.tripTracking,
+        builder: (context, state) => TripTrackingScreen(
+          bookingId: state.uri.queryParameters['id'] ?? '',
+        ),
+      ),
+      GoRoute(
+        path: Routes.faq,
+        builder: (context, state) => const FaqScreen(),
+      ),
+      GoRoute(
+        path: Routes.supportChat,
+        builder: (context, state) => SupportChatScreen(
+          bookingId: state.uri.queryParameters['bookingId'],
         ),
       ),
     ],
