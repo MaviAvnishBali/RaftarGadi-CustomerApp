@@ -162,23 +162,30 @@ class VehicleSelectScreen extends ConsumerWidget {
               ),
             ),
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.all(RaftarSpacing.lg),
-                itemCount: quotes.length,
-                separatorBuilder: (_, _) => const SizedBox(height: RaftarSpacing.md),
-                itemBuilder: (context, index) {
-                  final quote = quotes[index];
-                  final isSelected = quote.vehicle.id == selectedId ||
-                      (selectedId == null && quote.vehicle.legacyType == draft.vehicleType);
-                  return _VehicleTile(
-                    quote: quote,
-                    icon: getVehicleIcon(quote.vehicle.name),
-                    isSelected: isSelected,
-                    onTap: () => ref
-                        .read(bookingDraftControllerProvider.notifier)
-                        .chooseVehicle(quote.vehicle, quote.fare),
-                  );
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  ref.invalidate(vehicleQuotesProvider);
+                  await ref.read(vehicleQuotesProvider.future);
                 },
+                child: ListView.separated(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(RaftarSpacing.lg),
+                  itemCount: quotes.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: RaftarSpacing.md),
+                  itemBuilder: (context, index) {
+                    final quote = quotes[index];
+                    final isSelected = quote.vehicle.id == selectedId ||
+                        (selectedId == null && quote.vehicle.legacyType == draft.vehicleType);
+                    return _VehicleTile(
+                      quote: quote,
+                      icon: getVehicleIcon(quote.vehicle.name),
+                      isSelected: isSelected,
+                      onTap: () => ref
+                          .read(bookingDraftControllerProvider.notifier)
+                          .chooseVehicle(quote.vehicle, quote.fare),
+                    );
+                  },
+                ),
               ),
             ),
           ],

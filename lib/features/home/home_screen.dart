@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:customer_app/app/router/routes.dart';
 import 'package:customer_app/features/booking/booking_draft_controller.dart';
 import 'package:customer_app/session/session_controller.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:repositories/repositories.dart';
 import 'package:shared_models/shared_models.dart';
@@ -16,14 +19,31 @@ final dynamicVehicleTypesProvider = FutureProvider<List<DynamicVehicleType>>((re
 });
 
 /// Provider for available vehicles in customer's area using Redis progressive geofencing (10km -> 15km -> 25km).
-final availableVehiclesNearbyProvider = FutureProvider<AvailableVehiclesResult>((ref) async {
+final availableVehiclesNearbyProvider = FutureProvider.autoDispose<AvailableVehiclesResult>((ref) async {
   final repo = ref.read(vehicleRepositoryProvider);
-  // Default coordinates (e.g. Connaught Place, Central Delhi)
-  const lat = 28.6315;
-  const lng = 77.2167;
+  double lat = 28.6315;
+  double lng = 77.2167;
+
+  try {
+    final permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.always || permission == LocationPermission.whileInUse) {
+      final pos = await Geolocator.getLastKnownPosition() ??
+          await Geolocator.getCurrentPosition(
+            locationSettings: const LocationSettings(
+              accuracy: LocationAccuracy.medium,
+              timeLimit: Duration(seconds: 3),
+            ),
+          );
+      lat = pos.latitude;
+      lng = pos.longitude;
+    }
+  } catch (_) {
+    // Graceful fallback to default coordinates
+  }
+
   final result = await repo.getAvailableVehiclesNearby(latitude: lat, longitude: lng);
   return result.fold(
-    (err) => const AvailableVehiclesResult(
+    (err) => AvailableVehiclesResult(
       searchLat: lat,
       searchLng: lng,
       searchRadiusKm: 50,
@@ -45,6 +65,24 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   String? _selectedVehicleId;
+  Timer? _fleetRefreshTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Auto-refresh fleet availability every 8 seconds while on home screen
+    _fleetRefreshTimer = Timer.periodic(const Duration(seconds: 8), (_) {
+      if (mounted) {
+        ref.invalidate(availableVehiclesNearbyProvider);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _fleetRefreshTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +113,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ],
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(RaftarSpacing.lg),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(dynamicVehicleTypesProvider);
+          ref.invalidate(availableVehiclesNearbyProvider);
+          await ref.read(availableVehiclesNearbyProvider.future);
+        },
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(RaftarSpacing.lg),
         children: [
           // Modern Pickup & Drop search card
           Card(
@@ -284,8 +329,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(height: RaftarSpacing.xxl),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 double _getVehicleBaseFare(DynamicVehicleType v) {
