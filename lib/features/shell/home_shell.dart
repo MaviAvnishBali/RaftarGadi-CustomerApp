@@ -42,6 +42,11 @@ class HomeShell extends StatelessWidget {
             selectedIcon: Icons.receipt_long_rounded,
             label: l10n.navBookings,
           ),
+          const RaftarDestination(
+            icon: Icons.headset_mic_outlined,
+            selectedIcon: Icons.headset_mic_rounded,
+            label: 'Support',
+          ),
           RaftarDestination(
             icon: Icons.person_outline_rounded,
             selectedIcon: Icons.person_rounded,

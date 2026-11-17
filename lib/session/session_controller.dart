@@ -47,28 +47,36 @@ class SessionController extends Notifier<SessionState> {
     return const SessionState.unknown();
   }
 
+  void setUnauthenticated() {
+    state = const SessionState(status: SessionStatus.unauthenticated);
+  }
+
   /// Restores a persisted session, if any. Called once from the splash.
   Future<void> bootstrap() async {
-    final raw = _store.read<String>(_userKey);
-    final token = _store.read<String>(_tokenKey);
-    final refreshToken = _store.read<String>(_refreshKey);
-
-    if (token != null && token.isNotEmpty) {
-      ref.read(apiClientProvider).setAuthToken(token);
-    }
-    if (refreshToken != null && refreshToken.isNotEmpty) {
-      ref.read(apiClientProvider).setRefreshToken(refreshToken);
-    }
-
-    if (raw == null || token == null || token.isEmpty) {
-      state = const SessionState(status: SessionStatus.unauthenticated);
-      return;
-    }
     try {
-      final user = AppUser.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-      state = SessionState(status: SessionStatus.authenticated, user: user);
+      final raw = _store.read<String>(_userKey);
+      final token = _store.read<String>(_tokenKey);
+      final refreshToken = _store.read<String>(_refreshKey);
+
+      if (token != null && token.isNotEmpty) {
+        ref.read(apiClientProvider).setAuthToken(token);
+      }
+      if (refreshToken != null && refreshToken.isNotEmpty) {
+        ref.read(apiClientProvider).setRefreshToken(refreshToken);
+      }
+
+      if (raw == null || token == null || token.isEmpty) {
+        state = const SessionState(status: SessionStatus.unauthenticated);
+        return;
+      }
+      try {
+        final user = AppUser.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+        state = SessionState(status: SessionStatus.authenticated, user: user);
+      } catch (_) {
+        await signOut();
+      }
     } catch (_) {
-      await signOut();
+      state = const SessionState(status: SessionStatus.unauthenticated);
     }
   }
 

@@ -149,7 +149,7 @@ class VehicleSelectScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 2),
                         const Text(
-                          'Geofence Search: 10 km → 25 km → 50 km',
+                          'Geofence Search: 10 km → 15 km → 25 km',
                           style: TextStyle(
                             fontSize: 11,
                             color: RaftarColors.textSecondary,
@@ -352,7 +352,7 @@ class _VehicleTile extends StatelessWidget {
                       Icon(Icons.radio_button_unchecked, color: Colors.grey, size: 7),
                       SizedBox(width: 4),
                       Text(
-                        'No drivers within 50 km',
+                        'No drivers within 25 km',
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,

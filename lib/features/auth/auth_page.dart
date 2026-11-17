@@ -23,33 +23,43 @@ class AuthPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final form = ContentConstraint(
-      maxWidth: 460,
+      maxWidth: 440,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: RaftarSpacing.xl,
-          vertical: RaftarSpacing.xxxl,
+          vertical: RaftarSpacing.xl,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: RaftarLogo(height: 48),
+            const SizedBox(height: RaftarSpacing.lg),
+            const Center(
+              child: RaftarLogo(height: 52, onNavyPanel: false),
             ),
-            const SizedBox(height: RaftarSpacing.huge),
-            Text(
-              eyebrow.toUpperCase(),
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: RaftarColors.primary,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.1,
+            const SizedBox(height: RaftarSpacing.xxl),
+            Center(
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: RaftarColors.navy,
+                      fontSize: 26,
+                    ),
+                textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: RaftarSpacing.sm),
-            Text(title, style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: RaftarSpacing.sm),
-            Text(subtitle, style: Theme.of(context).textTheme.bodyLarge),
-            const SizedBox(height: RaftarSpacing.xxxl),
+            const SizedBox(height: 6),
+            Center(
+              child: Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: RaftarColors.textSecondary,
+                      fontSize: 14,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: RaftarSpacing.xxl),
             child,
           ],
         ),

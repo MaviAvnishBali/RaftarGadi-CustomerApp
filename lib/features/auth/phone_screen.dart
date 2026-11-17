@@ -59,17 +59,17 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
   Widget build(BuildContext context) {
     return DoubleBackExitScope(
       child: AuthPage(
-        eyebrow: 'Welcome back',
-        title: 'Sign in to move more.',
-        subtitle: 'Enter the phone number linked to your Raftar Gaddi account.',
+        eyebrow: 'Welcome',
+        title: 'Welcome Back!',
+        subtitle: 'Login to continue',
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             RaftarTextField(
               label: 'Phone number',
               controller: _phone,
-              hint: '98765 43210',
-              prefixIcon: Icons.phone_rounded,
+              hint: '+91 Enter Mobile Number',
+              prefixIcon: Icons.phone_android_rounded,
               keyboardType: TextInputType.phone,
               errorText: _error,
               onChanged: (_) {
@@ -77,38 +77,146 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
               },
             ),
             const SizedBox(height: RaftarSpacing.xl),
-            RaftarButton(
-              label: 'Continue with OTP',
-              isLoading: _busy,
-              onPressed: _requestOtp,
+            // Green "Send OTP" Button matching Image 2
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                RaftarButton(
+                  label: 'Send OTP',
+                  isLoading: _busy,
+                  onPressed: _requestOtp,
+                ),
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: 0.0,
+                    child: TextButton(
+                      onPressed: _busy ? null : _requestOtp,
+                      child: const Text('Continue with OTP'),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: RaftarSpacing.xxl),
+            const SizedBox(height: RaftarSpacing.xl),
+            // Divider "or"
             Row(
               children: [
                 const Expanded(child: Divider()),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: RaftarSpacing.md,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: RaftarSpacing.md),
                   child: Text(
-                    'NEW TO RAFTAR?',
-                    style: Theme.of(context).textTheme.labelSmall,
+                    'or',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: RaftarColors.textSecondary,
+                    ),
                   ),
                 ),
                 const Expanded(child: Divider()),
               ],
             ),
             const SizedBox(height: RaftarSpacing.lg),
-            RaftarButton(
-              label: 'Create an account',
-              variant: RaftarButtonVariant.secondary,
-              onPressed: () => context.go(Routes.register),
+            // Social Login Buttons
+            OutlinedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Google Sign-In is supported for partner accounts')),
+                );
+              },
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+                side: const BorderSide(color: RaftarColors.border),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(RaftarRadii.md)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: Text('G', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'Continue with Google',
+                    style: TextStyle(
+                      color: RaftarColors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: RaftarSpacing.md),
+            OutlinedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Apple Sign-In is supported on iOS devices')),
+                );
+              },
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+                side: const BorderSide(color: RaftarColors.border),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(RaftarRadii.md)),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.apple, color: RaftarColors.navy, size: 22),
+                  SizedBox(width: 10),
+                  Text(
+                    'Continue with Apple',
+                    style: TextStyle(
+                      color: RaftarColors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: RaftarSpacing.xl),
-            Text(
-              'By continuing, you agree to our Terms of Service and Privacy Policy.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall,
+            // Don't have an account? Sign Up
+            Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                const Text(
+                  "Don't have an account? ",
+                  style: TextStyle(color: RaftarColors.textSecondary, fontSize: 14),
+                ),
+                GestureDetector(
+                  onTap: () => context.go(Routes.register),
+                  child: const Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      color: RaftarColors.green,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Center(
+              child: TextButton(
+                onPressed: () => context.go(Routes.register),
+                child: const Text(
+                  'Create an account',
+                  style: TextStyle(
+                    color: RaftarColors.textSecondary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

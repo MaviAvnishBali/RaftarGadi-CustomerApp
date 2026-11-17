@@ -9,6 +9,7 @@ import 'package:customer_app/features/booking/vehicle_select_screen.dart';
 import 'package:customer_app/features/bookings/bookings_screen.dart';
 import 'package:customer_app/features/faq/faq_screen.dart';
 import 'package:customer_app/features/home/home_screen.dart';
+import 'package:customer_app/features/onboarding/welcome_screen.dart';
 import 'package:customer_app/features/profile/profile_screen.dart';
 import 'package:customer_app/features/shell/home_shell.dart';
 import 'package:customer_app/features/splash/splash_screen.dart';
@@ -40,15 +41,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final location = state.matchedLocation;
 
       if (status == SessionStatus.unknown) {
+        if (location == Routes.welcome || location.startsWith(Routes.login)) {
+          return null;
+        }
         return location == Routes.splash ? null : Routes.splash;
       }
 
       final inAuthFlow =
-          location.startsWith(Routes.login) || location == Routes.register;
+          location.startsWith(Routes.login) ||
+          location == Routes.register ||
+          location == Routes.welcome;
       final atSplash = location == Routes.splash;
 
       if (status == SessionStatus.unauthenticated) {
-        return inAuthFlow ? null : Routes.login;
+        return inAuthFlow ? null : Routes.welcome;
       }
 
       // Authenticated: keep them out of splash/login.
@@ -59,6 +65,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.splash,
         builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: Routes.welcome,
+        builder: (context, state) => const CustomerWelcomeScreen(),
       ),
       GoRoute(
         path: Routes.login,
@@ -91,6 +101,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.bookings,
                 builder: (context, state) => const BookingsScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.support,
+                builder: (context, state) => const SupportChatScreen(),
               ),
             ],
           ),
